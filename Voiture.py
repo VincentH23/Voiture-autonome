@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 class Voiture:
     def __init__(self,x,y,n,p,tailleMaps):
-        self.pos=np.array([[x],[y]]).astype('float')
-        self.direction=np.array([[-1],[0]]).astype('float')
+        self.pos=np.array([[x],[y]]).astype('float64')
+        self.direction=np.array([[-1],[0]]).astype('float64')
         self.size=n,p
         self.map=np.zeros((tailleMaps,tailleMaps))
 
@@ -24,10 +24,13 @@ class Voiture:
         self.direction=rotation@self.direction
         self.pos=self.pos+vitesse*self.direction
         self.index= rotation@(self.index-self.pos)+self.pos+vitesse * self.direction
+
         self.map=0*self.map
-        indice=self.index.astype('int32')
+        indice=self.index.astype('int64')
 
         self.map[indice[1],indice[0]]=1
+
+        print(np.sum(self.map== 1))
 
 
 
@@ -41,8 +44,7 @@ plt.figure()
 plt.imshow(voiture.map)
 k=0
 while 1:
-    print(voiture.direction)
-    print(voiture.pos,k)
+
     if k%3==0:
         voiture.deplacement(5,0.1)
         plt.show()
@@ -54,5 +56,7 @@ while 1:
         plt.figure()
         plt.imshow(voiture.map)
 
+
     plt.show()
     k+=1
+    print(voiture.pos)

@@ -1,13 +1,17 @@
 import numpy as np
+
 import matplotlib.pyplot as plt
+
 class Voiture:
-    def __init__(self,x,y,n,p,tailleMaps):
+
+    def __init__(self,x,y,n,p,size_matrix = (360,360)):
         self.pos=np.array([[x],[y]]).astype('float64')
         self.direction=np.array([[-1],[0]]).astype('float64')
         self.size=n,p
-        self.map=np.zeros((tailleMaps,tailleMaps))
+        self.map=np.zeros(size_matrix)
 
         self.map[y-p//2:y+p//2+1,x-n//2:x+n//2+1]=1
+        self.step = 0
 
         self.index=np.zeros((2,n*p))
         counter=0
@@ -29,6 +33,7 @@ class Voiture:
         indice=self.index.astype('int64')
 
         self.map[indice[1],indice[0]]=1
+        self.step += 1
 
         print(np.sum(self.map== 1))
 
@@ -36,27 +41,3 @@ class Voiture:
 
 
 
-map=np.zeros((15,15))
-angle=np.linspace(0,np.pi/2,11)
-voiture=Voiture(80,150,35,25,360)
-print(voiture.index)
-plt.figure()
-plt.imshow(voiture.map)
-k=0
-while 1:
-
-    if k%3==0:
-        voiture.deplacement(5,0.1)
-        plt.show()
-        plt.figure()
-        plt.imshow(voiture.map)
-    else:
-        voiture.deplacement(5, 0)
-        plt.show()
-        plt.figure()
-        plt.imshow(voiture.map)
-
-
-    plt.show()
-    k+=1
-    print(voiture.pos)

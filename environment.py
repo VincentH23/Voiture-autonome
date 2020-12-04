@@ -27,13 +27,14 @@ class Environment:
     def nextStep(self):
 
         if self.data['gameover'] == False:
-            self.data["step"] += 1
+
             decision =self.car.decision(self.get_data())
             self.vitesse+=decision[0]*self.acc+(1-decision[0])*self.decelaration
             self.vitesse=max(self.vitesse,self.vitesseMin)
+
             angle=(decision[1]-decision[2])*self.DeltaAngle
             self.car.deplacement(self.vitesse,angle)
-            #Fonction pour a ctualiser le score à faire
+            self.score += self.vitesse
             self.window=self.my_road.map+self.car.map
             A=self.window[self.window>5]
             if A.shape[0]==0:

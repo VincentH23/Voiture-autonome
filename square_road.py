@@ -37,13 +37,13 @@ class Square_road:  ## pas de test pour init, set et get, qui sont reprises de r
         self.number_of_turn = 0
 
         #init pour demarer way_to_go
-        for j in range(self.pos_x,self.pos_x + 3*self._size_road):
+        for j in range(self.pos_x,self.pos_x + 4*self._size_road):
             for i in range(self.pos_y - self._size_road,self.pos_y + self._size_road):
                 self.map[i][j] = 1
                 self.path.append([[i, j, self.turn]])
             self.map[self.pos_y + self._size_road][j] = 2
             self.map[self.pos_y - self._size_road - 1][j] = 2
-        self.pos_x += 3*self._size_road
+        self.pos_x += 4*self._size_road
 
 
     def get_road(self):
@@ -120,19 +120,35 @@ class Square_road:  ## pas de test pour init, set et get, qui sont reprises de r
 
     def way_to_go(self):
         if self.direction == 0:
-            if self.number_of_turn > 0:
+            if self.number_of_turn == 0:
+                if self.pos_x + 2*self._size_road + 3 - self._size_matrix[1] == 0:
+                    self.turn == 1
+                else:
+                    x = random.random()
+                    if x > 0.9:
+                        self.turn = 1
+            elif self.number_of_turn in [1,2]:
                 distance = self.pos_x - [item for item in self.path if item[-1] == 1][-1][1]
                 if abs(distance) > 4*self._size_road:
-                    self.turn = random.choice([0,1])
-                elif self.pos_x + self._size_road + 1 - self._size_matrix[1] == 0 or self.pos_x - self._size_road - 1 == 0:
+                    x = random.random()
+                    if x > 0.9:
+                        self.turn = 1
+                elif self.pos_x + 2*self._size_road + 3 - self._size_matrix[1] == 0 or self.pos_x - 2*self._size_road - 3 == 0:
                     self.turn = 1
+            elif self.number_of_turn == 3:
+                if self.pos_y == self.path[0][0]:
+                    self.turn = 1
+                else:
+                    self.turn = 0
             else:
                 self.turn = 1
         else:
             distance = self.pos_y - [item for item in self.path if item[-1] == 1][-1][0]
             if abs(distance) > 4 * self._size_road:
-                self.turn = random.choice([0, 1])
-            elif self.pos_y + self._size_road + 1 - self._size_matrix[0] == 0 or self.pos_y - self._size_road - 1 == 0:
+                x = random.random()
+                if x > 0.9:
+                    self.turn = 1
+            elif self.pos_y + 2*self._size_road + 3 - self._size_matrix[0] == 0 or self.pos_y - self._size_road - 1 == 0:
                 self.turn = 1
 
     def next_slot(self):
@@ -142,11 +158,11 @@ class Square_road:  ## pas de test pour init, set et get, qui sont reprises de r
             if self.number_of_turn == 1:
                 new_pos = (self.pos_y + self._size_road + 1,self.pos_x + self._size_road + 1)
             elif self.number_of_turn == 2:
-                new_pos = (self.pos_y + self._size_road + 1,self.pos_x - self._size_road + 1)
+                new_pos = (self.pos_y + self._size_road + 1,self.pos_x - self._size_road - 1)
             elif self.number_of_turn == 3:
-                new_pos = (self.pos_y - self._size_road + 1,self.pos_x - self._size_road + 1)
+                new_pos = (self.pos_y - self._size_road - 1,self.pos_x - self._size_road - 1)
             elif self.number_of_turn == 4:
-                new_pos = (self.pos_y - self._size_road + 1,self.pos_x + self._size_road + 1)
+                new_pos = (self.pos_y - self._size_road - 1,self.pos_x + self._size_road + 1)
         else:
             new_pos = (self.pos_y + mvt_with_dir_dic[self.number_of_turn][0],self.pos_x + mvt_with_dir_dic[self.number_of_turn][1])
         self.add_segment(new_pos)
@@ -154,5 +170,7 @@ class Square_road:  ## pas de test pour init, set et get, qui sont reprises de r
     def continuous_road(self):
         while self.number_of_turn != 4:
             self.next_slot()
-            self.direction = turn_to_dir_dic[self.number_of_turn]
+            print(self.number_of_turn)
+            if self.number_of_turn < 4:
+                self.direction = turn_to_dir_dic[self.number_of_turn]
             self.turn = 0

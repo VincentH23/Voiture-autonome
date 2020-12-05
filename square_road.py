@@ -37,7 +37,7 @@ class Square_road:  ## pas de test pour init, set et get, qui sont reprises de r
         self.number_of_turn = 0
 
         #init pour demarer way_to_go
-        for j in range(self.pos_x,self.pos_x + 4*self._size_road):
+        for j in range(self.pos_x,self.pos_x + 4*self._size_road + 1):
             for i in range(self.pos_y - self._size_road,self.pos_y + self._size_road):
                 self.map[i][j] = 1
                 self.path.append([[i, j, self.turn]])
@@ -54,34 +54,41 @@ class Square_road:  ## pas de test pour init, set et get, qui sont reprises de r
 
     def draw_road_segment(self):
         if self.direction == 0:
-            for k in range(self._size_road):
+            for k in range(self._size_road + 1):
                 self.map[self.pos_y + k][self.pos_x] = 1
                 self.map[self.pos_y - k][self.pos_x] = 1
-            print(self.pos_y + self._size_road + 1,self.pos_x,self.map.shape)
-            self.map[self.pos_y + self._size_road + 1][self.pos_x] = 2
+            self.map[self.pos_y + self._size_road][self.pos_x] = 2
             self.map[self.pos_y - self._size_road - 1][self.pos_x] = 2
         else:
-            print(self.pos_y + self._size_road + 1, self.pos_x, self.map.shape)
-            self.map[self.pos_y][self.pos_x - self._size_road : self.pos_x + self._size_road] = 1
+            self.map[self.pos_y][self.pos_x - self._size_road : self.pos_x + self._size_road + 1] = 1
             self.map[self.pos_y][self.pos_x + self._size_road + 1] = 2
             self.map[self.pos_y][self.pos_x - self._size_road - 1] = 2
 
     def draw_turn(self):
         if self.number_of_turn == 1:
-            print(self.map.shape)
-            self.map[self.pos_y - 2*self._size_road - 2][self.pos_x - self._size_road : self.pos_x + self._size_road + 1] = 2
-            self.map[self.pos_y - 2*self._size_road - 2 : self.pos_y][self.pos_x + self._size_road + 1] = 2
-            self.map[self.pos_y - 2*self._size_road - 1 : self.pos_y][self.pos_x - self._size_road : self.pos_x + self._size_road] = 1
+            for k in range(self.pos_x - self._size_road, self.pos_x + self._size_road + 1):
+                self.map[self.pos_y - 2*self._size_road - 1][k] = 2
+            for k in range(self.pos_y - 2*self._size_road - 2, self.pos_y + 1):
+                self.map[k][self.pos_x + self._size_road + 1] = 2
+            for i in range(self.pos_y - 2*self._size_road, self.pos_y + 1):
+                for j in range(self.pos_x - self._size_road, self.pos_x + self._size_road + 1):
+                    self.map[i][j] = 1
 
         elif self.number_of_turn == 2:
-            self.map[self.pos_y + self._size_road + 1][self.pos_x : self.pos_x + 2*self._size_road + 2] = 2
-            self.map[self.pos_y - self._size_road : self.pos_y + self._size_road + 1][self.pos_x + 2*self._size_road + 2] = 2
-            self.map[self.pos_y - self._size_road : self.pos_y + self._size_road][self.pos_x : self.pos_x + 2*self._size_road + 1] = 1
+            self.map[self.pos_y + self._size_road][self.pos_x : self.pos_x + 2*self._size_road + 2] = 2
+            for k in range(self.pos_y - self._size_road, self.pos_y + self._size_road + 1):
+                self.map[k][self.pos_x + 2*self._size_road + 2] = 2
+            for i in range(self.pos_y - self._size_road, self.pos_y + self._size_road):
+                for j in range(self.pos_x, self.pos_x + 2*self._size_road + 2):
+                    self.map[i][j] = 1
 
         elif self.number_of_turn == 3:
-            self.map[self.pos_y + 2 * self._size_road + 2][self.pos_x - self._size_road - 1: self.pos_x + self._size_road] = 2
-            self.map[self.pos_y: self.pos_y + 2 * self._size_road + 2][self.pos_x - self._size_road - 1] = 2
-            self.map[self.pos_y: self.pos_y + 2 * self._size_road + 1][self.pos_x - self._size_road: self.pos_x + self._size_road] = 1
+            self.map[self.pos_y + 2 * self._size_road + 1][self.pos_x - self._size_road - 1: self.pos_x + self._size_road + 1] = 2
+            for i in range(self.pos_y, self.pos_y + 2 * self._size_road + 2):
+                self.map[i][self.pos_x - self._size_road - 1] = 2
+            for j in range(self.pos_x - self._size_road, self.pos_x + self._size_road+ 1):
+                for i in range(self.pos_y, self.pos_y + 2 * self._size_road + 1):
+                    self.map[i][j] = 1
 
         else:
             self.map[self.pos_y - self._size_road - 1][self.pos_x - 2 * self._size_road - 2 : self.pos_x] = 2
@@ -89,13 +96,12 @@ class Square_road:  ## pas de test pour init, set et get, qui sont reprises de r
             self.map[self.pos_y - self._size_road: self.pos_y + self._size_road][self.pos_x - 2 * self._size_road - 1 : self.pos_x] = 1
 
     def add_segment(self,new_pos):
-        self.draw_road_segment()
         self.pos_y = new_pos[0]
         self.pos_x = new_pos[1]
-        """if self.turn == 0:"""
+        ##if self.turn == 0:
         self.path.append([self.pos_y, self.pos_x,self.turn])
 
-        """else :
+        '''else :
             if self.number_of_turn == 1:
                 for k in range(1,self._size_road + 1):
                     self.path.append([self.pos_y, self.pos_x - k,self.turn])
@@ -116,61 +122,56 @@ class Square_road:  ## pas de test pour init, set et get, qui sont reprises de r
                     self.path.append([self.pos_y, self.pos_x + k,self.turn])
                     self.path.append([self.pos_y + k, self.pos_x,self.turn])
                 self.path.append([self.pos_y, self.pos_x - self._size_road,self.turn])
-            self.draw_turn()"""
+            #self.draw_turn()'''
 
     def way_to_go(self):
         if self.direction == 0:
             if self.number_of_turn == 0:
                 if self.pos_x + 2*self._size_road + 3 - self._size_matrix[1] == 0:
-                    self.turn == 1
+                    self.turn = 1
                 else:
                     x = random.random()
                     if x > 0.9:
                         self.turn = 1
-            elif self.number_of_turn in [1,2]:
-                distance = self.pos_x - [item for item in self.path if item[-1] == 1][-1][1]
-                if abs(distance) > 4*self._size_road:
-                    x = random.random()
-                    if x > 0.9:
-                        self.turn = 1
-                elif self.pos_x + 2*self._size_road + 3 - self._size_matrix[1] == 0 or self.pos_x - 2*self._size_road - 3 == 0:
+            elif self.number_of_turn == 2:
+                if self.pos_x == self.path[0][1] + 2*self._size_road + 2:
                     self.turn = 1
-            elif self.number_of_turn == 3:
-                if self.pos_y == self.path[0][0]:
-                    self.turn = 1
-                else:
-                    self.turn = 0
-            else:
-                self.turn = 1
         else:
-            distance = self.pos_y - [item for item in self.path if item[-1] == 1][-1][0]
-            if abs(distance) > 4 * self._size_road:
-                x = random.random()
-                if x > 0.9:
+            if self.number_of_turn == 1:
+                distance = self.pos_y - [item for item in self.path if item[-1] == 1][-1][0]
+                if self.pos_y + 2*self._size_road + 7 - self._size_matrix[0] == 0:
                     self.turn = 1
-            elif self.pos_y + 2*self._size_road + 3 - self._size_matrix[0] == 0 or self.pos_y - self._size_road - 1 == 0:
-                self.turn = 1
+                elif abs(distance) > 4 * self._size_road:
+                    x = random.random()
+                    if x > 0.9:
+                        self.turn = 1
+
 
     def next_slot(self):
         self.way_to_go()
         if self.turn == 1:
             self.number_of_turn +=1
             if self.number_of_turn == 1:
-                new_pos = (self.pos_y + self._size_road + 1,self.pos_x + self._size_road + 1)
+                new_pos = (self.pos_y + self._size_road,self.pos_x + self._size_road + 1)
             elif self.number_of_turn == 2:
                 new_pos = (self.pos_y + self._size_road + 1,self.pos_x - self._size_road - 1)
             elif self.number_of_turn == 3:
                 new_pos = (self.pos_y - self._size_road - 1,self.pos_x - self._size_road - 1)
-            elif self.number_of_turn == 4:
-                new_pos = (self.pos_y - self._size_road - 1,self.pos_x + self._size_road + 1)
+        elif self.number_of_turn == 3 and self.pos_y == self.path[0][0] + self._size_road :
+            self.number_of_turn = 4
+            new_pos = (self.pos_y,self.pos_x)
         else:
             new_pos = (self.pos_y + mvt_with_dir_dic[self.number_of_turn][0],self.pos_x + mvt_with_dir_dic[self.number_of_turn][1])
         self.add_segment(new_pos)
 
+        if self.turn == 1:
+            self.draw_turn()
+        else:
+            self.draw_road_segment()
+
     def continuous_road(self):
         while self.number_of_turn != 4:
             self.next_slot()
-            print(self.number_of_turn)
             if self.number_of_turn < 4:
                 self.direction = turn_to_dir_dic[self.number_of_turn]
             self.turn = 0

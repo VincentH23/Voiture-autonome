@@ -71,19 +71,44 @@ class Any_road:
 
     def draw_right_to_down(self):
         for k in range(self.pos_x - self._size_road, self.pos_x + self._size_road + 1):
-            self.map[self.pos_y - 2*self._size_road - 1][k] = 2
-        for k in range(self.pos_y - 2*self._size_road - 2, self.pos_y + 1):
+            self.map[self.pos_y - 2*self._size_road - 2][k] = 2
+        for k in range(self.pos_y - 2*self._size_road - 2, self.pos_y):
             self.map[k][self.pos_x + self._size_road + 1] = 2
-        for i in range(self.pos_y - 2*self._size_road, self.pos_y + 1):
+        for i in range(self.pos_y - 2*self._size_road - 1, self.pos_y + 1):
             for j in range(self.pos_x - self._size_road, self.pos_x + self._size_road + 1):
                 self.map[i][j] = 1
+        self.map[self.pos_y - 1][self.pos_x - self._size_road - 1] = 2
+        self.map[self.pos_y - 2*self._size_road -2][self.pos_x - self._size_road - 1] = 2
+        for i in range(self.pos_y - 2 * self._size_road - 1, self.pos_y - 1):
+            self.map[i][self.pos_x - self._size_road - 1] = 1
+
+    def draw_right_to_up(self):
+        for k in range(self.pos_x - self._size_road, self.pos_x + self._size_road + 2):
+            self.map[self.pos_y + 2*self._size_road + 1][k] = 2
+        for k in range(self.pos_y, self.pos_y + 2*self._size_road + 2):
+            self.map[k][self.pos_x + self._size_road + 2] = 2
+        for i in range(self.pos_y, self.pos_y + 2*self._size_road + 1):
+            for j in range(self.pos_x - self._size_road - 1, self.pos_x + self._size_road + 2):
+                self.map[i][j] = 1
+        self.map[self.pos_y - 1][self.pos_x - self._size_road - 1] = 2
+
 
     def draw_down_to_left(self):
         self.map[self.pos_y + self._size_road][self.pos_x : self.pos_x + 2*self._size_road + 2] = 2
-        for k in range(self.pos_y - self._size_road, self.pos_y + self._size_road + 1):
+        for k in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road + 1):
             self.map[k][self.pos_x + 2*self._size_road + 2] = 2
-        for i in range(self.pos_y - self._size_road, self.pos_y + self._size_road):
+        for i in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road):
             for j in range(self.pos_x, self.pos_x + 2*self._size_road + 2):
+                self.map[i][j] = 1
+        # for j in range(self.pos_x - 2*self._size_road - 1):
+        #     self.map[self.pos_y + self._size_road + 1][j] = 1
+
+    def draw_down_to_right(self):
+        self.map[self.pos_y + self._size_road][self.pos_x - 2 * self._size_road - 2: self.pos_x] = 2
+        for k in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road + 1):
+            self.map[k][self.pos_x - 2 * self._size_road - 2] = 2
+        for i in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road):
+            for j in range(self.pos_x - 2 * self._size_road - 2, self.pos_x):
                 self.map[i][j] = 1
 
     def draw_left_to_up(self):
@@ -94,10 +119,33 @@ class Any_road:
             for i in range(self.pos_y, self.pos_y + 2 * self._size_road + 1):
                 self.map[i][j] = 1
 
+    def draw_left_to_down(self):
+        self.map[self.pos_y - 2 * self._size_road - 2][self.pos_x - self._size_road - 1: self.pos_x + self._size_road + 1] = 2
+        for i in range(self.pos_y - 2 * self._size_road - 2, self.pos_y + 1):
+            self.map[i][self.pos_x - self._size_road - 2] = 2
+        for j in range(self.pos_x - self._size_road - 1, self.pos_x + self._size_road + 1):
+            for i in range(self.pos_y - 2 * self._size_road - 1, self.pos_y + 1):
+                self.map[i][j] = 1
+
     def draw_up_to_right(self):
-        self.map[self.pos_y - self._size_road - 1][self.pos_x - 2 * self._size_road - 2 : self.pos_x] = 2
-        self.map[self.pos_y - self._size_road - 1: self.pos_y + self._size_road][self.pos_x - 2 * self._size_road - 2] = 2
-        self.map[self.pos_y - self._size_road: self.pos_y + self._size_road][self.pos_x - 2 * self._size_road - 1 : self.pos_x] = 1
+        for j in range(self.pos_x - 2 * self._size_road - 2, self.pos_x + 1):
+            self.map[self.pos_y - self._size_road - 1][j] = 2
+        for i in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road + 1):
+            self.map[i][self.pos_x - 2 * self._size_road - 2] = 2
+        for i in range(self.pos_y - self._size_road, self.pos_y + self._size_road + 1):
+            for j in range(self.pos_x - 2 * self._size_road - 1, self.pos_x):
+                self.map[i][j] = 1
+
+    def draw_up_to_left(self):
+        for j in range(self.pos_x - 2 * self._size_road - 2, self.pos_x + 1):
+            self.map[self.pos_y - self._size_road - 1][j] = 2
+        for i in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road + 1):
+            self.map[i][self.pos_x - 2 * self._size_road - 2] = 2
+        for i in range(self.pos_y - self._size_road, self.pos_y + self._size_road + 1):
+            for j in range(self.pos_x  - 2 * self._size_road - 1, self.pos_x + 1):
+                self.map[i][j] = 1
+
+
 
     def add_segment(self,new_pos):
         self.pos_y = new_pos[0]
@@ -208,20 +256,20 @@ class Any_road:
                 if self.turn == 1:
                     new_pos = (self.pos_y + self._size_road + 1,self.pos_x + self._size_road + 1)
                     self.add_segment(new_pos)
-                    self.draw_right_to_down() ##ok
+                    self.draw_right_to_down()
                 else:
                     new_pos = (self.pos_y - self._size_road - 1, self.pos_x + self._size_road + 1)
                     self.add_segment(new_pos)
-                    #self.draw_trun_to_up()
+                    self.draw_right_to_up()
             elif self.direction == 1:
                 if self.turn == 2:
                     new_pos = (self.pos_y + self._size_road + 1, self.pos_x - self._size_road - 1)
                     self.add_segment(new_pos)
-                    #self.draw_turn_to_down()
+                    self.draw_left_to_down()
                 else:
                     new_pos = (self.pos_y - self._size_road - 1, self.pos_x - self._size_road - 1)
                     self.add_segment(new_pos)
-                    self.draw_left_to_up() ##ok
+                    self.draw_left_to_up()
             elif self.direction == 2:
                 if self.turn == 1:
                     new_pos = (self.pos_y - self._size_road - 1, self.pos_x + self._size_road + 1)
@@ -230,12 +278,12 @@ class Any_road:
                 else:
                     new_pos = (self.pos_y - self._size_road - 1, self.pos_x - self._size_road - 1)
                     self.add_segment(new_pos)
-                    #self.draw_turn_to_left()
+                    self.draw_up_to_left()
             else:
                 if self.turn == 2:
                     new_pos = (self.pos_y + self._size_road + 1, self.pos_x + self._size_road + 1)
                     self.add_segment(new_pos)
-                    #self.draw_turn_to_right()
+                    self.draw_down_to_right()
                 else:
                     new_pos = (self.pos_y + self._size_road + 1, self.pos_x - self._size_road - 1)
                     self.add_segment(new_pos)

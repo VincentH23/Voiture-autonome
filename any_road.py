@@ -83,12 +83,12 @@ class Any_road:
             self.map[i][self.pos_x - self._size_road - 1] = 1
 
     def draw_right_to_up(self):
-        for k in range(self.pos_x - self._size_road, self.pos_x + self._size_road + 2):
+        for k in range(self.pos_x - self._size_road - 1, self.pos_x + self._size_road + 2):
             self.map[self.pos_y + 2*self._size_road + 1][k] = 2
         for k in range(self.pos_y, self.pos_y + 2*self._size_road + 2):
-            self.map[k][self.pos_x + self._size_road + 2] = 2
+            self.map[k][self.pos_x + self._size_road + 1] = 2
         for i in range(self.pos_y, self.pos_y + 2*self._size_road + 1):
-            for j in range(self.pos_x - self._size_road - 1, self.pos_x + self._size_road + 2):
+            for j in range(self.pos_x - self._size_road - 1, self.pos_x + self._size_road + 1):
                 self.map[i][j] = 1
         self.map[self.pos_y - 1][self.pos_x - self._size_road - 1] = 2
 
@@ -98,31 +98,32 @@ class Any_road:
         for k in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road + 1):
             self.map[k][self.pos_x + 2*self._size_road + 2] = 2
         for i in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road):
-            for j in range(self.pos_x, self.pos_x + 2*self._size_road + 2):
+            for j in range(self.pos_x + 1, self.pos_x + 2*self._size_road + 2):
                 self.map[i][j] = 1
         # for j in range(self.pos_x - 2*self._size_road - 1):
         #     self.map[self.pos_y + self._size_road + 1][j] = 1
 
     def draw_down_to_right(self):
-        self.map[self.pos_y + self._size_road][self.pos_x - 2 * self._size_road - 2: self.pos_x] = 2
-        for k in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road + 1):
-            self.map[k][self.pos_x - 2 * self._size_road - 2] = 2
         for i in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road):
             for j in range(self.pos_x - 2 * self._size_road - 2, self.pos_x):
                 self.map[i][j] = 1
+        self.map[self.pos_y + self._size_road][self.pos_x - 2 * self._size_road - 2: self.pos_x] = 2
+        for k in range(self.pos_y - self._size_road - 1, self.pos_y + self._size_road + 1):
+            self.map[k][self.pos_x - 2 * self._size_road - 2] = 2
 
     def draw_left_to_up(self):
-        self.map[self.pos_y + 2 * self._size_road + 1][self.pos_x - self._size_road - 1: self.pos_x + self._size_road + 1] = 2
-        for i in range(self.pos_y, self.pos_y + 2 * self._size_road + 2):
+        for i in range(self.pos_y - 1, self.pos_y + 2*self._size_road + 2):
             self.map[i][self.pos_x - self._size_road - 1] = 2
-        for j in range(self.pos_x - self._size_road, self.pos_x + self._size_road+ 1):
-            for i in range(self.pos_y, self.pos_y + 2 * self._size_road + 1):
+        for j in range(self.pos_x - self._size_road - 1,self.pos_x + self._size_road + 2):
+            self.map[self.pos_y + 2*self._size_road + 1][j] = 2
+        for i in range(self.pos_y, self.pos_y + 2*self._size_road + 1):
+            for j in range(self.pos_x - self._size_road, self.pos_x + self._size_road + 1):
                 self.map[i][j] = 1
 
     def draw_left_to_down(self):
         self.map[self.pos_y - 2 * self._size_road - 2][self.pos_x - self._size_road - 1: self.pos_x + self._size_road + 1] = 2
         for i in range(self.pos_y - 2 * self._size_road - 2, self.pos_y + 1):
-            self.map[i][self.pos_x - self._size_road - 2] = 2
+            self.map[i][self.pos_x - self._size_road - 1] = 2
         for j in range(self.pos_x - self._size_road - 1, self.pos_x + self._size_road + 1):
             for i in range(self.pos_y - 2 * self._size_road - 1, self.pos_y + 1):
                 self.map[i][j] = 1
@@ -152,9 +153,197 @@ class Any_road:
         self.pos_x = new_pos[1]
         self.path.append([self.pos_y, self.pos_x,self.turn])
 
+
+    def possible_turn_0(self):
+        distance = self.pos_x - [item for item in self.path if item[-1] == 1][-1][1]
+        distance = abs(distance)
+        if self._size_matrix[1] - self.pos_x - 2*self._size_road - 2 < 0:
+            self.number_of_turn = self.limit_of_turn
+        elif distance <= 1:
+            self.turn = 0
+        elif self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2 or self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+            if self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2:
+                if self.map[self.pos_y][self.pos_x + self._size_road + 2] == 2:
+                    self.turn = 2
+                else:
+                    if distance >= 2*self._size_road + 2:
+                        x = random.random()
+                        if x > 0.5:
+                            self.turn = 2
+                        else:
+                            self.turn = 0
+            elif self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+                if self.map[self.pos_y][self.pos_x + self._size_road + 2] == 2:
+                    self.turn = 1
+                else:
+                    if distance >= 2 * self._size_road + 2:
+                        x = random.random()
+                        if x > 0.5:
+                            self.turn = 1
+                        else:
+                            self.turn = 0
+            if self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2 and self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+                self.turn = 0
+        else:
+            if self.map[self.pos_y][self.pos_x + self._size_road + 2] == 2:
+                x = random.random()
+                if x > 0.5:
+                    self.turn = 1
+                else:
+                    self.turn = 2
+            elif distance >= 2*self._size_road + 2:
+                x = random.random()
+                if 0 <= x < 0.33:
+                    self.turn = 0
+                elif 0.33 <= x < 0.66:
+                    self.turn = 1
+                else:
+                    self.turn = 2
+
+
+    def possible_turn_1(self):
+        distance = self.pos_x - [item for item in self.path if item[-1] == 1][-1][1]
+        distance = abs(distance)
+        if self.pos_x - 2*self._size_road - 2 < 0:
+            self.number_of_turn = self.limit_of_turn
+        elif distance <= 1:
+            self.turn = 0
+        elif self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2 or self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+            if self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2:
+                if self.map[self.pos_y][self.pos_x - self._size_road - 2] == 2:
+                    self.turn = 1
+                else:
+                    if distance >= 2*self._size_road + 2:
+                        x = random.random()
+                        if x > 0.5:
+                            self.turn = 1
+                        else:
+                            self.turn = 0
+            elif self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+                if self.map[self.pos_y][self.pos_x - self._size_road - 2] == 2:
+                    self.turn = 2
+                else:
+                    if distance >= 2 * self._size_road + 2:
+                        x = random.random()
+                        if x > 0.5:
+                            self.turn = 1
+                        else:
+                            self.turn = 0
+            if self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2 and self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+                self.turn = 0
+        else:
+            if self.map[self.pos_y][self.pos_x - self._size_road - 2] == 2:
+                x = random.random()
+                if x > 0.5:
+                    self.turn = 1
+                else:
+                    self.turn = 2
+            elif distance >= 2*self._size_road + 2:
+                x = random.random()
+                if 0 <= x < 0.33:
+                    self.turn = 0
+                elif 0.33 <= x < 0.66:
+                    self.turn = 1
+                else:
+                    self.turn = 2
+
+    def possible_turn_2(self):
+        distance = self.pos_y - [item for item in self.path if item[-1] == 1][-1][0]
+        distance = abs(distance)
+        if self.pos_y - 2*self._size_road - 2 < 0:
+            self.number_of_turn = self.limit_of_turn
+        elif distance <= 1:
+            self.turn = 0
+        elif self.map[self.pos_y][self.pos_x + self._size_road + 2] == 2 or self.map[self.pos_y][self.pos_x - self._size_road - 2] == 2:
+            if self.map[self.pos_y][self.pos_x + self._size_road + 2]:
+                if self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+                    self.turn = 2
+                else:
+                    if distance >= 2*self._size_road + 2:
+                        x = random.random()
+                        if x > 0.5:
+                            self.turn = 2
+                        else:
+                            self.turn = 0
+            elif self.map[self.pos_y][self.pos_x - self._size_road - 2] == 2:
+                if self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+                    self.turn = 1
+                else:
+                    if distance >= 2 * self._size_road + 2:
+                        x = random.random()
+                        if x > 0.5:
+                            self.turn = 1
+                        else:
+                            self.turn = 0
+            if self.map[self.pos_y][self.pos_x + self._size_road + 2] == 2 and self.map[self.pos_y][self.pos_x - self._size_road - 2] == 2:
+                self.turn = 0
+        else:
+            if self.map[self.pos_y - self._size_road - 2][self.pos_x] == 2:
+                x = random.random()
+                if x > 0.5:
+                    self.turn = 1
+                else:
+                    self.turn = 2
+            elif distance >= 2*self._size_road + 2:
+                x = random.random()
+                if 0 <= x < 0.33:
+                    self.turn = 0
+                elif 0.33 <= x < 0.66:
+                    self.turn = 1
+                else:
+                    self.turn = 2
+
+    def possible_turn_3(self):
+        distance = self.pos_y - [item for item in self.path if item[-1] == 1][-1][0]
+        distance = abs(distance)
+        if self._size_matrix[0] - self.pos_y - 2*self._size_road - 2 < 0:
+            self.number_of_turn = self.limit_of_turn
+        elif distance <= 1:
+            self.turn = 0
+        elif self.map[self.pos_y][self.pos_x + self._size_road + 2] == 2 or self.map[self.pos_y][self.pos_x - self._size_road - 2] == 2:
+            if self.map[self.pos_y][self.pos_x + self._size_road + 2]:
+                if self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2:
+                    self.turn = 2
+                else:
+                    if distance >= 2*self._size_road + 2:
+                        x = random.random()
+                        if x > 0.5:
+                            self.turn = 2
+                        else:
+                            self.turn = 0
+            elif self.map[self.pos_y][self.pos_x - self._size_road - 2]:
+                if self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2:
+                    self.turn = 1
+                else:
+                    if distance >= 2 * self._size_road + 2:
+                        x = random.random()
+                        if x > 0.5:
+                            self.turn = 1
+                        else:
+                            self.turn = 0
+            if self.map[self.pos_y][self.pos_x + self._size_road + 2] == 2 and self.map[self.pos_y][self.pos_x - self._size_road - 2] == 2:
+                self.turn = 0
+        else:
+            if self.map[self.pos_y + self._size_road + 2][self.pos_x] == 2:
+                x = random.random()
+                if x > 0.5:
+                    self.turn = 1
+                else:
+                    self.turn = 2
+            elif distance >= 2*self._size_road + 2:
+                x = random.random()
+                if 0 <= x < 0.33:
+                    self.turn = 0
+                elif 0.33 <= x < 0.66:
+                    self.turn = 1
+                else:
+                    self.turn = 2
+
     def way_to_go(self):
         if self.map[self.pos_y][self.pos_x] == 2:
             self.number_of_turn = self.limit_of_turn
+
+
         else:
             if self.number_of_turn == 0:  ##obligé de faire ça car il y a une erreure d'indexage de liste sinon
                 if self.pos_x + 2 * self._size_road + 4 - self._size_matrix[1] == 0:
@@ -167,86 +356,16 @@ class Any_road:
                     else:
                         self.turn = 1
             elif self.direction == 0: ## si la voiture se dirige vers la droite
-                distance = self.pos_x - [item for item in self.path if item[-1] == 1][-1][1]
-                distance = abs(distance)
+                self.possible_turn_0()
 
-                if self.pos_x + 2 * self._size_road + 3 - self._size_matrix[1] == 0: ##si on est proche du bord
-                    if self.pos_y > self._size_matrix[0]//2:
-                        self.turn = 2
-                    else:
-                        self.turn = 1
-                if self._size_matrix[0] -self.pos_y <= 2*self._size_road + 2:
-                    self.turn = 2
-                elif self.pos_y <= 2*self._size_road + 2:
-                    self.turn = 1
-                elif distance >= int(3 * self._size_road + 1):  ##pour que les routes ne se chevauchent pas
-                    x = random.random()
-                    if 0 <= x < 0.33:
-                        self.turn = 0
-                    elif 0.33 <= x < 0.66:
-                        self.turn = 1
-                    else:
-                        self.turn = 2
             elif self.direction == 1: ##si la voiture se dirige vers la gauche
-                distance = self.pos_x - [item for item in self.path if item[-1] == 1][-1][1]
-                distance = abs(distance)
-                if self.pos_x + 2 * self._size_road + 2 == 0:##si on est proche du bord
-                    if self.pos_y > self._size_matrix[0] // 2:
-                        self.turn = 1
-                    else:
-                        self.turn = 2
-                if self._size_matrix[0] -self.pos_y <= 2*self._size_road + 2:
-                    self.turn = 1
-                elif self.pos_y <= 2*self._size_road + 2:
-                    self.turn = 2
-                elif distance >= int(2 * self._size_road + 1):  ##pour que les routes ne se chevauchent pas
-                    x = random.random()
-                    if 0 <= x < 0.33:
-                         self.turn = 0
-                    elif 0.33 <= x < 0.66:
-                        self.turn = 1
-                    else:
-                         self.turn = 2
+                self.possible_turn_1()
+
             elif self.direction == 2: ##si la voiture se dirige vers le haut
-                distance = self.pos_y - [item for item in self.path if item[-1] == 1][-1][0]
-                distance = abs(distance)
-                if self.pos_y + 2 * self._size_road + 3 == 0:##si on est proche du bord
-                    if self.pos_x > self._size_matrix[1] // 2:
-                        self.turn = 2
-                    else:
-                        self.turn = 1
-                if self._size_matrix[1] -self.pos_x <= 2*self._size_road + 2:
-                    self.turn = 2
-                elif self.pos_x <= 2*self._size_road + 2:
-                    self.turn = 1
-                elif distance >= int(3 * self._size_road + 1):  ##pour que les routes ne se chevauchent pas
-                    x = random.random()
-                    if 0 <= x < 0.33:
-                         self.turn = 0
-                    elif 0.33 <= x < 0.66:
-                        self.turn = 1
-                    else:
-                        self.turn = 2
+                self.possible_turn_2()
+
             else:
-                distance = self.pos_y - [item for item in self.path if item[-1] == 1][-1][0]
-                distance = abs(distance)
-                if self.pos_y + 2 * self._size_road + 2 - self._size_matrix[0] == 0:##si on est proche du bord
-                    if self.pos_x > self._size_matrix[1] // 2:
-                        self.turn = 1
-                    else:
-                        self.turn = 2
-                if self._size_matrix[1] -self.pos_x <= 2*self._size_road + 2:
-                    self.turn = 2
-                elif self.pos_x <= 2*self._size_road + 2:
-                    self.turn = 1
-                elif distance >= int(3 * self._size_road + 1):  ##pour que les routes ne se chevauchent pas
-                     x = random.random()
-                     if 0 <= x < 0.33:
-                         self.turn = 0
-                     elif 0.33 <= x < 0.66:
-                         self.turn = 1
-                     else:
-                         self.turn = 2
+                self.possible_turn_3()
 
     def next_slot(self):
         self.way_to_go()
@@ -263,13 +382,13 @@ class Any_road:
                     self.draw_right_to_up()
             elif self.direction == 1:
                 if self.turn == 2:
-                    new_pos = (self.pos_y + self._size_road + 1, self.pos_x - self._size_road - 1)
+                    new_pos = (self.pos_y - self._size_road - 1, self.pos_x + self._size_road + 1)
                     self.add_segment(new_pos)
-                    self.draw_left_to_down()
+                    self.draw_left_to_up()
                 else:
                     new_pos = (self.pos_y - self._size_road - 1, self.pos_x - self._size_road - 1)
                     self.add_segment(new_pos)
-                    self.draw_left_to_up()
+                    self.draw_left_to_down()
             elif self.direction == 2:
                 if self.turn == 1:
                     new_pos = (self.pos_y - self._size_road - 1, self.pos_x + self._size_road + 1)
